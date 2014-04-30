@@ -52,12 +52,17 @@
    (menu-principal 
     "File" (("Exit" :callback 'exit-callback))))
   (:menu-bar menu-principal)
-  (:layouts (main-layout capi:column-layout '(simple-toolbar :divider capi:container) 
-                         :ratios '(1 nil 4)))
+  (:layouts (main-layout capi:column-layout '(simple-toolbar :divider capi:container)))
   (:default-initargs :title "Test"))
+
+
+(defmethod maximize ((i interface-pane-principal))
+  "Maximize <i>."
+  (setf (capi:top-level-interface-display-state i) :maximized))
 
 (defun reset-environment-callback (data interface)
   "Perform actions to reset system."
+  (declare (ignore data))
   (setf *tasks* nil)
   (reset-task-environment-settings)
   (mark-and-sweep 3))
@@ -66,9 +71,6 @@
   (prompt-for-plusp-integer "Configure"))
 
 (defun exit-callback (data interface)
+  (declare (ignore data))
   (when (capi:confirm-yes-or-no "Exit environment")
     (capi:apply-in-pane-process interface 'capi:quit-interface interface)))
-
-(defmethod maximize ((i interface-pane-principal))
-  "Maximize <i>."
-  (setf (capi:top-level-interface-display-state i) :maximized))
