@@ -1,5 +1,5 @@
 
-(defclass base-pane (base-model)
+(defclass base-pane ()
   ((name :initarg :name :initform "" :accessor name)
    (title :initarg :title :initform "" :accessor title)
    (interface :initarg :interface :initform nil :accessor interface)
@@ -29,8 +29,7 @@
 
 (defmethod open-pane ((p base-pane) &key mdi-interface)
   "Display <p> on <mdi-interface>."
-  (display-interface p mdi-interface)
-  (post-initialize-interface p))
+  (display-interface p mdi-interface))
 
 (defmethod display-interface ((p base-pane) mdi-interface)
   "Display <p> interface on <mdi-interface>."
@@ -48,37 +47,7 @@
   "Answer <p> interface argument list."
   (interface-arguments p))
 
-(defmethod create-population-editors ((p base-pane) population)
-  "Answer a list of editors for individuals in <population>."
-  (let ((count (length (individuals-array population)))
-        (result))
-    (dotimes (i count i)
-      (push (make-image-editor-pane
-             :model (aref (individuals-array population) i)
-             :mdi-interface (interface p)
-             :open nil) 
-            result))
-    result))
-
-(defmethod execute-menu-action ((p base-pane) actions interface data)
-  "Execute menu selected action on <p>."
-  (let ((action (cadr (assoc data actions :test #'equalp))))
-    (if action (funcall action interface data))))
-
-(defun multi-column-list-panel-test-column-items (state)
-  (loop for (nil data) on state by 'cddr collect data))
-
-(defmethod element-interface ((i base-interface))
-  i)
-
-(defmethod element-interface ((i t))
-  (capi:element-interface i))
-
 (defmethod destroy-interface :after ((interface base-interface))
   "Perform actions when <interface> is destroyed."
   (clear-events-for (pane interface))
   (clear-events-for interface))
-
-(defmethod post-initialize-interface ((p base-pane))
-  "Post initialize actions for <p>."
-  nil)

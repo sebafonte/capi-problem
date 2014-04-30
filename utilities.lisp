@@ -1,4 +1,8 @@
 
+(defmethod to-list ((a array))
+  "Answer a new list with <a> contents."
+  (map 'list #'(lambda (x) x) a))
+
 (defmethod equals ((a t) (b t))
   "Answers whether <a> equals <b>."
   (equal a b))
