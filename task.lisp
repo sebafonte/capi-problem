@@ -20,7 +20,7 @@
   "Execute <task> while updating its state."
   (setf (initial-time task) (get-universal-time))
   (search-loop task)
-  (setf (final-time task) (get-universal-time))
+  (setf (final-time task) (get-universal-time)))
 
 (defun search-loop (task)
   "Method where calculations take place for <task>."
